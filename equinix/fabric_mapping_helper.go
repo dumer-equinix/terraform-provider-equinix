@@ -297,6 +297,26 @@ func operationToTerra(operation *v4.ConnectionOperation) *schema.Set {
 	return operationSet
 }
 
+func portOperationToTerra(operation *v4.PortOperation) *schema.Set {
+	if operation == nil {
+		return nil
+	}
+	operations := []*v4.PortOperation{operation}
+	mappedOperations := make([]interface{}, 0)
+	for _, operation := range operations {
+		mappedOperation := make(map[string]interface{})
+		mappedOperation["operational_status"] = operation.OperationalStatus
+		mappedOperation["connection_count"] = operation.ConnectionCount
+		mappedOperation["op_status_changed_at"] = operation.OpStatusChangedAt.String()
+		mappedOperations = append(mappedOperations, mappedOperation)
+	}
+	operationSet := schema.NewSet(
+		schema.HashResource(createOperationRes),
+		mappedOperations,
+	)
+	return operationSet
+}
+
 func orderMappingToTerra(order *v4.Order) *schema.Set {
 	if order == nil {
 		return nil
@@ -347,16 +367,19 @@ func changeLogToTerra(changeLog *v4.Changelog) *schema.Set {
 }
 
 func portRedundancyToTerra(redundancy *v4.PortRedundancy) *schema.Set {
+	if redundancy == nil {
+		return nil
+	}
 	redundancies := []*v4.PortRedundancy{redundancy}
-	mappedRedundancys := make([]interface{}, 0)
+	mappedRedundancies := make([]interface{}, 0)
 	for _, redundancy := range redundancies {
 		mappedRedundancy := make(map[string]interface{})
 		mappedRedundancy["priority"] = string(*redundancy.Priority)
-		mappedRedundancys = append(mappedRedundancys, mappedRedundancy)
+		mappedRedundancies = append(mappedRedundancies, mappedRedundancy)
 	}
 	redundancySet := schema.NewSet(
 		schema.HashResource(createPortRedundancyRes),
-		mappedRedundancys,
+		mappedRedundancies,
 	)
 	return redundancySet
 }
@@ -396,6 +419,9 @@ func notificationToTerra(notifications []v4.SimplifiedNotification) []map[string
 }
 
 func locationToTerra(location *v4.SimplifiedLocation) *schema.Set {
+	if location == nil {
+		return nil
+	}
 	locations := []*v4.SimplifiedLocation{location}
 	mappedLocations := make([]interface{}, 0)
 	for _, location := range locations {
