@@ -60,16 +60,16 @@ func setFabricPortMap(d *schema.ResourceData, port v4.Port) diag.Diagnostics {
 		"physical_port_quantity": port.PhysicalPortQuantity,
 		"operation":              portOperationToTerra(port.Operation),
 		"order":                  orderMappingToTerra(port.Order),
-		"redundancy":             portRedundancyToTerra(port.Redundancy),
+		"redundancy":             portRedundancy2ToTerra(port.Redundancy),
 		"account":                accountToTerra(port.Account),
 		"change_log":             changeLogToTerra(port.Changelog),
 		"location":               locationToTerra(port.Location),
-		//"device":                 deviceToTerra(port.Device),
-		//"interface":              portInterfaceToTerra(port.Interface_),
-		//"tether":                 tetherToTerra(port.Tether),
-		//"encapsulation":          encapsulationrToTerra(port.Encapsulation),
-		//"lag":                    lagToTerra(port.Lag),
-		//"settings":               settingsToTerra(port.Settings),
+		"device":                 deviceToTerra(port.Device),
+		"interface":              portInterfaceToTerra(port.Interface_),
+		"tether":                 tetherToTerra(port.Tether),
+		"encapsulation":          encapsulationToTerra(port.Encapsulation),
+		"lag":                    lagToTerra(port.Lag),
+		"settings":               settingsToTerra(port.Settings),
 	})
 	if err != nil {
 		return diag.FromErr(err)

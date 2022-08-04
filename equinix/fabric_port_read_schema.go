@@ -4,6 +4,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var readPortDeviceRes = &schema.Resource{
+	Schema: readPortDeviceSch(),
+}
+
 func readPortDeviceSch() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
@@ -12,7 +16,7 @@ func readPortDeviceSch() map[string]*schema.Schema {
 			Description: "Port Name",
 		},
 		"redundancy": {
-			Type:        schema.TypeString,
+			Type:        schema.TypeSet,
 			Computed:    true,
 			Description: "Port Device Redundancy",
 			Elem: &schema.Resource{
@@ -20,6 +24,14 @@ func readPortDeviceSch() map[string]*schema.Schema {
 			},
 		},
 	}
+}
+
+var readPortDeviceRedundancyRes = &schema.Resource{
+	Schema: readRedundancySch(),
+}
+
+var readPortInterfaceRes = &schema.Resource{
+	Schema: readPortInterfaceSch(),
 }
 
 func readPortInterfaceSch() map[string]*schema.Schema {
@@ -42,6 +54,10 @@ func readPortInterfaceSch() map[string]*schema.Schema {
 	}
 }
 
+var readPortEncapsulationRes = &schema.Resource{
+	Schema: readFabricPortEncapsulation(),
+}
+
 func readFabricPortEncapsulation() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"type": {
@@ -57,9 +73,13 @@ func readFabricPortEncapsulation() map[string]*schema.Schema {
 	}
 }
 
+var readPortLagRes = &schema.Resource{
+	Schema: readFabricPortLag(),
+}
+
 func readFabricPortLag() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"enable": {
+		"enabled": {
 			Type:        schema.TypeBool,
 			Computed:    true,
 			Description: "If LAG enabled",
@@ -80,6 +100,10 @@ func readFabricPortLag() map[string]*schema.Schema {
 			Description: "LAG port status",
 		},
 	}
+}
+
+var readPortSettingsRes = &schema.Resource{
+	Schema: readFabricPortSettings(),
 }
 
 func readFabricPortSettings() map[string]*schema.Schema {
@@ -110,6 +134,34 @@ func readPortOperationSch() map[string]*schema.Schema {
 			Description: "Date and time at which port availability changed",
 		},
 	}
+}
+
+var readPortsRedundancyRes = &schema.Resource{
+	Schema: readPortsRedundancySch(),
+}
+
+func readPortsRedundancySch() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"enabled": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "Access point redundancy",
+		},
+		"group": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Port redundancy group",
+		},
+		"priority": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Priority type-Primary or Secondary",
+		},
+	}
+}
+
+var readPortTetherRes = &schema.Resource{
+	Schema: readFabricPortTether(),
 }
 
 func readFabricPortTether() map[string]*schema.Schema {
@@ -270,7 +322,7 @@ func readFabricPortResourceSchema() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Port Redundancy Information",
 			Elem: &schema.Resource{
-				Schema: readPortRedundancySch(),
+				Schema: readPortsRedundancySch(),
 			},
 		},
 		"tether": {
